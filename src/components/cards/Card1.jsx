@@ -35,32 +35,34 @@ function Card({ id, images, details, price }) {
                 />
             </div>
             <div className="flex flex-col gap-4">
-                <h3 className="font-bold">
+                <h3 className="text-md font-bold">
                     <Link to={`/cars/${id}`}>
                         {brand} {model}
                     </Link>
                 </h3>
                 <ul className="flex gap-2">
                     {capacity && (
-                        <li className="text-xs px-2 py-1 bg-overlay rounded-default">
+                        <li className="text-xs px-2 py-1 rounded-default border-[1px] border-overlay">
+                            <span>ظرفیت </span>
                             <span>{capacity} </span>
                             <span>نفر</span>
                         </li>
                     )}
                     {year && (
-                        <li className="text-xs px-2 py-1 bg-overlay rounded-default">
-                            {year}
+                        <li className="text-xs px-2 py-1 rounded-default border-[1px] border-overlay">
+                            <span>سال </span>
+                            <span>{year}</span>
                         </li>
                     )}
                     {transmission && (
-                        <li className="text-xs px-2 py-1 bg-overlay rounded-default">
+                        <li className="text-xs px-2 py-1 rounded-default border-[1px] border-overlay">
                             {transmission}
                         </li>
                     )}
                 </ul>
             </div>
-            <div>
-                <div className="flex justify-around gap-10">
+            <div className="pt-3 pb-3">
+                <div className="flex justify-around gap-10 text-sm">
                     {pricePerDay && (
                         <div className="flex flex-col gap-1">
                             <div class="flex gap-1">
@@ -99,6 +101,7 @@ function Card({ id, images, details, price }) {
                             <span>روزانه</span>
                         </div>
                     )}
+                    <span className="w-[2px] h-10 flex bg-overlay" />
                     {pricePerMonth && (
                         <div className="flex flex-col gap-1">
                             <div class="flex gap-1">

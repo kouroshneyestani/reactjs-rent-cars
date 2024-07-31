@@ -1,12 +1,13 @@
 import { cars } from "../data";
-import { Container, Card1 as Card } from "../components";
+import { SpaceBar, Container, Card1 as Card } from "../components";
 
 function Cars() {
     return (
         <>
             <div>
+                <SpaceBar pt={null} />
                 <Container>
-                    <div className="flex flex-col md:flex-row gap-8 pt-8">
+                    <div className="flex flex-col md:flex-row gap-8">
                         <aside className="md:w-1/4 w-full">
                             <div className="md:sticky md:top-6 p-6 bg-gray-800"></div>
                         </aside>
@@ -20,6 +21,7 @@ function Cars() {
                         </main>
                     </div>
                 </Container>
+                <SpaceBar pt={null} />
             </div>
         </>
     );
