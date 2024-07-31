@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --afc-background-color: #ffffff;
+    --afc-text-color: #000000;
+    --afc-primary-color: hotpink;
+    --afc-secondary-color: #2d3748;
+}
+/* 
+ * Colors
+ */
+body {
+    color: var(--afc-text-color);
+    background-color: var(--afc-background-color);
+}
+body.dark {
+    color: var(--afc-background-color);
+    background-color: var(--afc-text-color);
+}
+/* 
+ * Typography
+ */
+body[dir="rtl"] {
+    direction: rtl;
+    text-align: right;
+}
+
+body[dir="ltr"] {
+    direction: ltr;
+    text-align: left;
+}
