@@ -29,7 +29,7 @@ const Accordion = ({ title, children, className }) => {
                     />
                 </svg>
             </button>
-            {isOpen && <div className="text-xs pt-4">{children}</div>}
+            {isOpen && <div className="text-sm pt-4">{children}</div>}
         </div>
     );
 };

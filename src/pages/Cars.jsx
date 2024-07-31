@@ -11,22 +11,32 @@ const Cars = () => {
     useEffect(() => {
         const brands = carBrands.map((brand) => ({
             value: brand.name,
-            label: brand.secondaryName,
+            label: `${brand.secondaryName} (${brand.name})`, // Persian and English names
         }));
         setBrandOptions(brands);
     }, []);
 
-    // Update models options based on selected brand
+    // Update models options based on selected brands
     useEffect(() => {
-        const selectedBrand = carBrands.find(
-            (brand) => brand.name === selectedFilters.brand
-        );
-        if (selectedBrand) {
-            const brandModels = selectedBrand.models.map((model) => ({
-                value: model.name,
-                label: model.secondaryName,
-            }));
-            setModels(brandModels);
+        const selectedBrands = selectedFilters.brand || [];
+
+        if (selectedBrands.length > 0) {
+            // Flatten models from selected brands
+            const allModels = selectedBrands.flatMap((brandName) => {
+                const brand = carBrands.find((b) => b.name === brandName);
+                return brand
+                    ? brand.models.map((model) => ({
+                          value: model.name,
+                          label: `${brand.secondaryName} - ${model.name}`, // Persian and English names
+                      }))
+                    : [];
+            });
+
+            // Remove duplicates
+            const uniqueModels = Array.from(
+                new Set(allModels.map((model) => model.value))
+            ).map((value) => allModels.find((model) => model.value === value));
+            setModels(uniqueModels);
         } else {
             setModels([]);
         }
@@ -35,13 +45,10 @@ const Cars = () => {
     const handleFilterChange = (name, value, checked) => {
         setSelectedFilters((prevFilters) => {
             const newFilters = { ...prevFilters };
-            if (
-                filters.find((filter) => filter.name === name).type ===
-                "checkbox"
-            ) {
+            if (name === "brand" || name === "model") {
                 if (!newFilters[name]) newFilters[name] = [];
                 if (checked) {
-                    newFilters[name].push(value);
+                    newFilters[name] = [...newFilters[name], value];
                 } else {
                     newFilters[name] = newFilters[name].filter(
                         (item) => item !== value
@@ -64,12 +71,12 @@ const Cars = () => {
             return false;
         if (
             selectedFilters.brand &&
-            car.details.brand !== selectedFilters.brand
+            !selectedFilters.brand.includes(car.details.brand)
         )
             return false;
         if (
             selectedFilters.model &&
-            car.details.model !== selectedFilters.model
+            !selectedFilters.model.includes(car.details.model)
         )
             return false;
         if (selectedFilters.year && car.details.year !== selectedFilters.year)
@@ -90,42 +97,36 @@ const Cars = () => {
 
     const filters = [
         {
-            type: "select",
-            name: "state",
-            label: "استان",
-            options: [
-                { value: "تهران", label: "تهران" },
-                // Add more state options
-            ],
-        },
-        {
-            type: "select",
-            name: "city",
-            label: "شهر",
-            options: [
-                { value: "تهران", label: "تهران" },
-                // Add more city options
-            ],
-        },
-        {
-            type: "select",
+            type: "checkbox",
             name: "brand",
-            label: "برند",
+            label: "برند ",
             options: brandOptions,
         },
         {
-            type: "select",
+            type: "checkbox",
             name: "model",
-            label: "مدل",
+            label: "مدل ",
             options: models,
         },
         {
-            type: "select",
+            type: "checkbox",
             name: "year",
-            label: "سال",
+            label: "سال تولید ",
             options: [
                 { value: 2023, label: "2023" },
-                // Add more year options
+                { value: 2022, label: "2022" },
+                { value: 2021, label: "2021" },
+                { value: 2020, label: "2020" },
+            ],
+        },
+        {
+            type: "checkbox",
+            name: "vehicleType",
+            label: "نوع خودرو ",
+            options: [
+                { value: "luxury", label: "لاکچری (Luxury)" },
+                { value: "suv", label: "اس یو وی (SUV)" },
+                { value: "economy", label: "اکونومی (Economy)" },
             ],
         },
         {
@@ -133,19 +134,8 @@ const Cars = () => {
             name: "transmission",
             label: "نوع گیربکس",
             options: [
-                { value: "auto", label: "اتوماتیک" },
-                { value: "manual", label: "دستی" },
-            ],
-        },
-        {
-            type: "checkbox",
-            name: "vehicleType",
-            label: "نوع خودرو",
-            options: [
-                { value: "luxury", label: "Luxury" },
-                { value: "suv", label: "SUV" },
-                { value: "economy", label: "Economy" },
-                // Add more vehicle types
+                { value: "auto", label: "اتوماتیک (Automatic)" },
+                { value: "manual", label: "دستی (Manual)" },
             ],
         },
     ];
@@ -160,6 +150,7 @@ const Cars = () => {
                             <Filters
                                 filters={filters}
                                 handleFilterChange={handleFilterChange}
+                                selectedFilters={selectedFilters} // Pass selectedFilters to Filters
                             />
                         </aside>
 
