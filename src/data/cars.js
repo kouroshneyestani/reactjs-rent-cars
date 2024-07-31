@@ -83,7 +83,7 @@ export const cars = [
         },
         details: {
             model: "530i",
-            brand: "بی‌ام‌و",
+            brand: "بی ام دبلیو",
             year: 2022,
             fuelType: "بنزین",
             transmission: "اتوماتیک",
@@ -133,7 +133,7 @@ export const cars = [
             longitude: 51.6681,
         },
         details: {
-            model: "کرولا",
+            model: "Corolla",
             brand: "تویوتا",
             year: 2021,
             fuelType: "بنزین",
@@ -288,7 +288,7 @@ export const cars = [
             longitude: 49.5832,
         },
         details: {
-            model: "راو 4",
+            model: "Rav4",
             brand: "تویوتا",
             year: 2021,
             fuelType: "بنزین",
