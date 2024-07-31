@@ -4,9 +4,9 @@ export const carBrands = [
         secondaryName: "مرسدس بنز",
         logo: "https://www.oneclickdrive.com/application/views/images/brands/mercedes-benz.svg?pol=113",
         models: [
-            { name: "S-Class", secondaryName: "اس کلاس" },
-            { name: "E-Class", secondaryName: "ای کلاس" },
-            { name: "C-Class", secondaryName: "سی کلاس" },
+            { name: "S500", secondaryName: "S500" },
+            { name: "E300", secondaryName: "E300" },
+            { name: "C200", secondaryName: "C200" },
             { name: "GLE", secondaryName: "جی ال ای" },
             { name: "GLS", secondaryName: "جی ال اس" },
         ],
@@ -28,7 +28,7 @@ export const carBrands = [
     },
     {
         name: "BMW",
-        secondaryName: "بی ام و",
+        secondaryName: "بی ام دبلیو",
         logo: "https://www.oneclickdrive.com/application/views/images/brands/bmw.svg?pol=113",
         models: [
             { name: "3 Series", secondaryName: "۳ سری" },
@@ -36,6 +36,7 @@ export const carBrands = [
             { name: "7 Series", secondaryName: "۷ سری" },
             { name: "X5", secondaryName: "ایکس ۵" },
             { name: "X7", secondaryName: "ایکس ۷" },
+            { name: "530i", secondaryName: "530i" },
         ],
     },
     {
@@ -81,7 +82,7 @@ export const carBrands = [
         models: [
             { name: "Camry", secondaryName: "کمری" },
             { name: "Corolla", secondaryName: "کرولا" },
-            { name: "Land Cruiser", secondaryName: "لندکروزر" },
+            { name: "Rav4", secondaryName: "Rav4" },
             { name: "Hilux", secondaryName: "هایلوکس" },
             { name: "Prado", secondaryName: "پرادو" },
         ],

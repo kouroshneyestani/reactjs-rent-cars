@@ -30,7 +30,7 @@ export const cars = [
             longitude: 51.4191,
         },
         details: {
-            model: "C200",
+            model: "S-Class",
             brand: "مرسدس بنز",
             year: 2023,
             fuelType: "بنزین",
@@ -159,7 +159,7 @@ export const cars = [
     },
     {
         id: 4,
-        title: "لکسوس RX350",
+        title: "لند روور",
         subtitle: "شاسی بلند لوکس و راحت",
         images: [placeholder1, placeholder2, placeholder3],
         user: "user4",
@@ -184,8 +184,8 @@ export const cars = [
             longitude: 52.5837,
         },
         details: {
-            model: "RX350",
-            brand: "لکسوس",
+            model: "Discovery",
+            brand: "لند روور",
             year: 2022,
             fuelType: "بنزین",
             transmission: "اتوماتیک",
@@ -193,7 +193,7 @@ export const cars = [
             doors: 5,
             color: "مشکی",
             description:
-                "لکسوس RX350، یک شاسی بلند لوکس با امکانات رفاهی بالا و طراحی زیبا.",
+                "لند روور Discovery یک شاسی بلند لوکس با امکانات رفاهی بالا و طراحی زیبا.",
             features: [
                 "سیستم تهویه مطبوع دوگانه",
                 "صندلی‌های چرمی",
