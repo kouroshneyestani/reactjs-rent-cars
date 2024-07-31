@@ -1,3 +1,4 @@
+import Accordion from "./Accordion";
 import HeartButton from "./HeartButton";
 
-export { HeartButton };
+export { Accordion, HeartButton };
