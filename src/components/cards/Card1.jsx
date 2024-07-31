@@ -13,13 +13,13 @@ function Card({ id, images, details, price }) {
     const { brand, model, year, capacity, transmission } = details;
 
     const cardImages = images.map((image, index) => (
-        <div className="relative pt-[75%] overflow-hidden">
+        <div className="relative pt-[75%] overflow-hidden rounded-default">
             <Link to={`/cars/${id}`}>
                 <img
                     src={image}
                     key={`image-${index}`}
                     alt="Image"
-                    className="absolute top-0 left-0 w-full h-full object-cover rounded-default"
+                    className="absolute top-0 left-0 w-full h-full object-cover"
                 />
             </Link>
             <HeartButton itemId={id} className="top-2 left-2 absolute" />
