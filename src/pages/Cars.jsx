@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { cars } from "../data";
+import React, { useState, useEffect } from "react";
+import { cars, carBrands } from "../data";
 import {
     SpaceBar,
     Container,
@@ -8,76 +8,35 @@ import {
     Card1 as Card,
 } from "../components";
 
-const filters = [
-    {
-        type: "select",
-        name: "city",
-        label: "شهر",
-        options: [
-            { value: "تهران", label: "تهران" },
-            // Add more city options
-        ],
-    },
-    {
-        type: "select",
-        name: "state",
-        label: "استان",
-        options: [
-            { value: "تهران", label: "تهران" },
-            // Add more state options
-        ],
-    },
-    {
-        type: "select",
-        name: "brand",
-        label: "برند",
-        options: [
-            { value: "مرسدس بنز", label: "مرسدس بنز" },
-            // Add more brand options
-        ],
-    },
-    {
-        type: "select",
-        name: "model",
-        label: "مدل",
-        options: [
-            { value: "C200", label: "C200" },
-            // Add more model options
-        ],
-    },
-    {
-        type: "select",
-        name: "year",
-        label: "سال",
-        options: [
-            { value: 2023, label: "2023" },
-            // Add more year options
-        ],
-    },
-    {
-        type: "checkbox",
-        name: "transmission",
-        label: "نوع گیربکس",
-        options: [
-            { value: "auto", label: "اتوماتیک" },
-            { value: "manual", label: "دستی" },
-        ],
-    },
-    {
-        type: "checkbox",
-        name: "vehicleType",
-        label: "نوع خودرو",
-        options: [
-            { value: "luxury", label: "Luxury" },
-            { value: "suv", label: "SUV" },
-            { value: "economy", label: "Economy" },
-            // Add more vehicle types
-        ],
-    },
-];
-
-function Cars() {
+const Cars = () => {
     const [selectedFilters, setSelectedFilters] = useState({});
+    const [models, setModels] = useState([]);
+    const [brandOptions, setBrandOptions] = useState([]);
+
+    // Initialize brand options based on carBrands data
+    useEffect(() => {
+        const brands = carBrands.map((brand) => ({
+            value: brand.name,
+            label: brand.secondaryName,
+        }));
+        setBrandOptions(brands);
+    }, []);
+
+    // Update models options based on selected brand
+    useEffect(() => {
+        const selectedBrand = carBrands.find(
+            (brand) => brand.name === selectedFilters.brand
+        );
+        if (selectedBrand) {
+            const brandModels = selectedBrand.models.map((model) => ({
+                value: model.name,
+                label: model.secondaryName,
+            }));
+            setModels(brandModels);
+        } else {
+            setModels([]);
+        }
+    }, [selectedFilters.brand]);
 
     const handleFilterChange = (name, value, checked) => {
         setSelectedFilters((prevFilters) => {
@@ -134,6 +93,68 @@ function Cars() {
 
         return true;
     });
+
+    const filters = [
+        {
+            type: "select",
+            name: "city",
+            label: "شهر",
+            options: [
+                { value: "تهران", label: "تهران" },
+                // Add more city options
+            ],
+        },
+        {
+            type: "select",
+            name: "state",
+            label: "استان",
+            options: [
+                { value: "تهران", label: "تهران" },
+                // Add more state options
+            ],
+        },
+        {
+            type: "select",
+            name: "brand",
+            label: "برند",
+            options: brandOptions,
+        },
+        {
+            type: "select",
+            name: "model",
+            label: "مدل",
+            options: models,
+        },
+        {
+            type: "select",
+            name: "year",
+            label: "سال",
+            options: [
+                { value: 2023, label: "2023" },
+                // Add more year options
+            ],
+        },
+        {
+            type: "checkbox",
+            name: "transmission",
+            label: "نوع گیربکس",
+            options: [
+                { value: "auto", label: "اتوماتیک" },
+                { value: "manual", label: "دستی" },
+            ],
+        },
+        {
+            type: "checkbox",
+            name: "vehicleType",
+            label: "نوع خودرو",
+            options: [
+                { value: "luxury", label: "Luxury" },
+                { value: "suv", label: "SUV" },
+                { value: "economy", label: "Economy" },
+                // Add more vehicle types
+            ],
+        },
+    ];
 
     return (
         <>
@@ -242,6 +263,6 @@ function Cars() {
             </div>
         </>
     );
-}
+};
 
 export default Cars;
