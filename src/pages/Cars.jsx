@@ -24,7 +24,7 @@ const Cars = () => {
             return brand
                 ? brand.models.map((model) => ({
                       value: model.name,
-                      label: `${brand.secondaryName} - ${model.name}`,
+                      label: `${brand.secondaryName} ${model.name}`,
                   }))
                 : [];
         });
@@ -125,7 +125,7 @@ const Cars = () => {
                     </aside>
 
                     <main className="w-full">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                             {filteredCars.map((car) => (
                                 <Card {...car} key={car.id} />
                             ))}
