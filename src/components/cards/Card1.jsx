@@ -32,12 +32,13 @@ function Card({ id, images, details, price }) {
                     pagination={{ clickable: true }}
                     spaceBetween={0}
                     slidesPerView={1}
+                    
                 />
             </div>
             <div className="flex flex-col gap-4">
                 <h3 className="text-md font-bold">
                     <Link to={`/cars/${id}`}>
-                        {brand} {model}
+                        {brand} <span className="font-mono">{model}</span>
                     </Link>
                 </h3>
                 <ul className="flex gap-2">
@@ -65,7 +66,7 @@ function Card({ id, images, details, price }) {
                 <div className="flex justify-around gap-10 text-sm">
                     {pricePerDay && (
                         <div className="flex flex-col gap-1">
-                            <div class="flex gap-1">
+                            <div className="flex gap-1">
                                 <span>{pricePerDay.toLocaleString()}</span>
                                 <span>
                                     <svg
@@ -104,7 +105,7 @@ function Card({ id, images, details, price }) {
                     <span className="w-[2px] h-10 flex bg-overlay" />
                     {pricePerMonth && (
                         <div className="flex flex-col gap-1">
-                            <div class="flex gap-1">
+                            <div className="flex gap-1">
                                 <span>{pricePerMonth.toLocaleString()}</span>
                                 <span>
                                     <svg
