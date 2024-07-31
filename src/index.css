@@ -3,10 +3,15 @@
 @tailwind utilities;
 
 :root {
-    --afc-background-color: #ffffff;
     --afc-text-color: #000000;
+    --afc-overlay-color: #eee;
+    --afc-background-color: #ffffff;
+
     --afc-primary-color: hotpink;
     --afc-secondary-color: #2d3748;
+}
+h1, h2, h3, h4, h5, h6 {
+  
 }
 /* 
  * Colors
@@ -16,8 +21,9 @@ body {
     background-color: var(--afc-background-color);
 }
 body.dark {
-    color: var(--afc-background-color);
-    background-color: var(--afc-text-color);
+    --afc-text-color: #ffffff;
+    --afc-overlay-color: #333333;
+    --afc-background-color: #000000;
 }
 /* 
  * Typography

@@ -11,9 +11,9 @@ import Cars from "./pages/Cars";
 import CarsDetails from "./pages/CarsDetails";
 import Error404 from "./pages/404";
 
-export default function App() {
+export default function App(props) {
     return (
-        <>
+        <div {...props}>
             <Routes>
                 <Route path="/" element={<Layout />}>
                     <Route index element={<Home />} />
@@ -24,6 +24,6 @@ export default function App() {
                     <Route path="*" element={<Error404 />} />
                 </Route>
             </Routes>
-        </>
+        </div>
     );
 }
