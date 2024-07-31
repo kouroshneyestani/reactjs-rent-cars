@@ -6,7 +6,7 @@ const Accordion = ({ title, children, className }) => {
     const toggleAccordion = () => setIsOpen(!isOpen);
 
     return (
-        <div className={`rounded-default ${className}`}>
+        <div className={className}>
             <button
                 onClick={toggleAccordion}
                 className={`flex items-center justify-between w-full text-left transition-all duration-300`}
@@ -15,7 +15,9 @@ const Accordion = ({ title, children, className }) => {
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
-                    className={`w-4 h-4 transform transition-transform duration-300 ${isOpen ? 'rotate-90' : 'rotate-0'}`}
+                    className={`w-4 h-4 transform transition-transform duration-300 ${
+                        isOpen ? "rotate-90" : "rotate-0"
+                    }`}
                 >
                     <path
                         fill="none"
@@ -27,11 +29,7 @@ const Accordion = ({ title, children, className }) => {
                     />
                 </svg>
             </button>
-            {isOpen && (
-                <div className="p-4">
-                    {children}
-                </div>
-            )}
+            {isOpen && <div className="text-xs pt-4">{children}</div>}
         </div>
     );
 };

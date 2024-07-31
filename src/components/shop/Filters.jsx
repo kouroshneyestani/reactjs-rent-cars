@@ -3,11 +3,14 @@ import { Accordion } from "../index";
 
 const Filters = ({ filters, handleFilterChange }) => {
     return (
-        <div className="md:sticky md:top-6 p-6 rounded-default bg-overlay border-b-4 border-primary">
+        <div className="md:sticky md:top-6 rounded-default border border-overlay">
             <ul className="flex flex-col">
                 {filters.map((filter, index) => (
                     <li key={`filter-input-${index}`}>
-                        <Accordion title={filter.label}>
+                        <Accordion
+                            title={filter.label}
+                            className="border-b py-4 pl-4 pr-5"
+                        >
                             {filter.type === "select" ? (
                                 <select
                                     name={filter.name}
@@ -17,9 +20,9 @@ const Filters = ({ filters, handleFilterChange }) => {
                                             e.target.value
                                         )
                                     }
-                                    className="form-select mb-2"
+                                    className="w-full form-select mb-2 outline-none border border-overlay px-2 py-2 rounded-default"
                                 >
-                                    <option value="">انتخاب کنید</option>
+                                    <option value="">همه {filter.label}ها</option>
                                     {filter.options.map((option) => (
                                         <option
                                             key={option.value}
@@ -48,7 +51,7 @@ const Filters = ({ filters, handleFilterChange }) => {
                                                             e.target.checked
                                                         )
                                                     }
-                                                    className="form-checkbox"
+                                                    className="w-full form-checkbox"
                                                 />
                                                 <span className="ml-2">
                                                     {option.label}

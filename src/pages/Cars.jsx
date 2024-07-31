@@ -91,20 +91,20 @@ const Cars = () => {
     const filters = [
         {
             type: "select",
-            name: "city",
-            label: "شهر",
-            options: [
-                { value: "تهران", label: "تهران" },
-                // Add more city options
-            ],
-        },
-        {
-            type: "select",
             name: "state",
             label: "استان",
             options: [
                 { value: "تهران", label: "تهران" },
                 // Add more state options
+            ],
+        },
+        {
+            type: "select",
+            name: "city",
+            label: "شهر",
+            options: [
+                { value: "تهران", label: "تهران" },
+                // Add more city options
             ],
         },
         {
@@ -156,14 +156,14 @@ const Cars = () => {
                 <SpaceBar pt={null} />
                 <Container>
                     <div className="flex flex-col md:flex-row gap-8">
-                        <aside className="md:w-1/4 w-full select-none">
+                        <aside className="md:w-2/6 w-full select-none">
                             <Filters
                                 filters={filters}
                                 handleFilterChange={handleFilterChange}
                             />
                         </aside>
 
-                        <main className="md:w-3/4 w-full">
+                        <main className="w-full">
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
                                 {filteredCars.map((car) => (
                                     <Card {...car} key={car.id} />
