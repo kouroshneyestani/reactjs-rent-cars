@@ -13,7 +13,7 @@ function Card({ id, images, details, price }) {
     const { brand, model, year, capacity, transmission } = details;
 
     const cardImages = images.map((image, index) => (
-        <div className="relative pt-[75%] overflow-hidden rounded-default">
+        <div className="relative pt-[75%] overflow-hidden">
             <Link to={`/cars/${id}`}>
                 <img
                     src={image}
@@ -22,19 +22,22 @@ function Card({ id, images, details, price }) {
                     className="absolute top-0 left-0 w-full h-full object-cover"
                 />
             </Link>
-            <HeartButton itemId={id} className="top-2 left-2 absolute" />
         </div>
     ));
 
     return (
-        <div className="flex flex-col gap-5">
-            <div>
+        <div className="flex flex-col gap-5 select-none">
+            <div className="relative overflow-hidden rounded-default">
                 <Carousel
                     slides={cardImages}
                     loop={true}
                     pagination={{ clickable: true }}
                     spaceBetween={0}
                     slidesPerView={1}
+                />
+                <HeartButton
+                    itemId={id}
+                    className="top-2 left-2 absolute z-10"
                 />
             </div>
             <div className="flex flex-col gap-4">
