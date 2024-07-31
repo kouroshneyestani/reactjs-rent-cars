@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Carousel } from "../index";
+import { Carousel, HeartButton } from "../index";
 
 function Card({ id, images, details, price }) {
     const {
@@ -13,13 +13,16 @@ function Card({ id, images, details, price }) {
     const { brand, model, year, capacity, transmission } = details;
 
     const cardImages = images.map((image, index) => (
-        <div className="relative pt-[69%] overflow-hidden">
-            <img
-                src={image}
-                key={`image-${index}`}
-                alt="Image"
-                className="absolute top-0 left-0 w-full h-full object-cover"
-            />
+        <div className="relative pt-[75%] overflow-hidden">
+            <Link to={`/cars/${id}`}>
+                <img
+                    src={image}
+                    key={`image-${index}`}
+                    alt="Image"
+                    className="absolute top-0 left-0 w-full h-full object-cover rounded-default"
+                />
+            </Link>
+            <HeartButton itemId={id} className="top-2 left-2 absolute" />
         </div>
     ));
 
@@ -32,7 +35,6 @@ function Card({ id, images, details, price }) {
                     pagination={{ clickable: true }}
                     spaceBetween={0}
                     slidesPerView={1}
-                    
                 />
             </div>
             <div className="flex flex-col gap-4">
