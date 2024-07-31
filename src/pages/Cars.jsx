@@ -7,53 +7,42 @@ const Cars = () => {
     const [models, setModels] = useState([]);
     const [brandOptions, setBrandOptions] = useState([]);
 
-    // Initialize brand options based on carBrands data
     useEffect(() => {
-        const brands = carBrands.map((brand) => ({
-            value: brand.name,
-            label: `${brand.secondaryName} (${brand.name})`, // Persian and English names
-        }));
-        setBrandOptions(brands);
+        setBrandOptions(
+            carBrands.map((brand) => ({
+                value: brand.name,
+                label: `${brand.secondaryName} (${brand.name})`,
+            }))
+        );
     }, []);
 
-    // Update models options based on selected brands
     useEffect(() => {
         const selectedBrands = selectedFilters.brand || [];
 
-        if (selectedBrands.length > 0) {
-            // Flatten models from selected brands
-            const allModels = selectedBrands.flatMap((brandName) => {
-                const brand = carBrands.find((b) => b.name === brandName);
-                return brand
-                    ? brand.models.map((model) => ({
-                          value: model.name,
-                          label: `${brand.secondaryName} - ${model.name}`, // Persian and English names
-                      }))
-                    : [];
-            });
+        const allModels = selectedBrands.flatMap((brandName) => {
+            const brand = carBrands.find((b) => b.name === brandName);
+            return brand
+                ? brand.models.map((model) => ({
+                      value: model.name,
+                      label: `${brand.secondaryName} - ${model.name}`,
+                  }))
+                : [];
+        });
 
-            // Remove duplicates
-            const uniqueModels = Array.from(
-                new Set(allModels.map((model) => model.value))
-            ).map((value) => allModels.find((model) => model.value === value));
-            setModels(uniqueModels);
-        } else {
-            setModels([]);
-        }
+        const uniqueModels = Array.from(
+            new Set(allModels.map((model) => model.value))
+        ).map((value) => allModels.find((model) => model.value === value));
+
+        setModels(uniqueModels);
     }, [selectedFilters.brand]);
 
     const handleFilterChange = (name, value, checked) => {
         setSelectedFilters((prevFilters) => {
             const newFilters = { ...prevFilters };
-            if (name === "brand" || name === "model") {
-                if (!newFilters[name]) newFilters[name] = [];
-                if (checked) {
-                    newFilters[name] = [...newFilters[name], value];
-                } else {
-                    newFilters[name] = newFilters[name].filter(
-                        (item) => item !== value
-                    );
-                }
+            if (["brand", "model"].includes(name)) {
+                newFilters[name] = checked
+                    ? [...(newFilters[name] || []), value]
+                    : (newFilters[name] || []).filter((item) => item !== value);
             } else {
                 newFilters[name] = value;
             }
@@ -61,39 +50,23 @@ const Cars = () => {
         });
     };
 
-    const filteredCars = cars.filter((car) => {
-        if (selectedFilters.city && car.location.city !== selectedFilters.city)
-            return false;
-        if (
-            selectedFilters.state &&
-            car.location.state !== selectedFilters.state
-        )
-            return false;
-        if (
-            selectedFilters.brand &&
-            !selectedFilters.brand.includes(car.details.brand)
-        )
-            return false;
-        if (
-            selectedFilters.model &&
-            !selectedFilters.model.includes(car.details.model)
-        )
-            return false;
-        if (selectedFilters.year && car.details.year !== selectedFilters.year)
-            return false;
-        if (
-            selectedFilters.transmission &&
-            !selectedFilters.transmission.includes(car.details.transmission)
-        )
-            return false;
-        if (
-            selectedFilters.vehicleType &&
-            !selectedFilters.vehicleType.includes(car.details.type)
-        )
-            return false;
+    const isCarMatchingFilters = (car) => {
+        const { city, state, brand, model, year, transmission, vehicleType } =
+            selectedFilters;
 
-        return true;
-    });
+        return (
+            (!city || car.location.city === city) &&
+            (!state || car.location.state === state) &&
+            (!brand || brand.includes(car.details.brand)) &&
+            (!model || model.includes(car.details.model)) &&
+            (!year || car.details.year === year) &&
+            (!transmission ||
+                transmission.includes(car.details.transmission)) &&
+            (!vehicleType || vehicleType.includes(car.details.type))
+        );
+    };
+
+    const filteredCars = cars.filter(isCarMatchingFilters);
 
     const filters = [
         {
@@ -112,12 +85,10 @@ const Cars = () => {
             type: "checkbox",
             name: "year",
             label: "سال تولید ",
-            options: [
-                { value: 2023, label: "2023" },
-                { value: 2022, label: "2022" },
-                { value: 2021, label: "2021" },
-                { value: 2020, label: "2020" },
-            ],
+            options: [2023, 2022, 2021, 2020].map((year) => ({
+                value: year,
+                label: year.toString(),
+            })),
         },
         {
             type: "checkbox",
@@ -141,31 +112,29 @@ const Cars = () => {
     ];
 
     return (
-        <>
-            <div>
-                <SpaceBar pt={null} />
-                <Container>
-                    <div className="flex flex-col md:flex-row gap-8">
-                        <aside className="md:w-2/6 w-full select-none">
-                            <Filters
-                                filters={filters}
-                                handleFilterChange={handleFilterChange}
-                                selectedFilters={selectedFilters} // Pass selectedFilters to Filters
-                            />
-                        </aside>
+        <div>
+            <SpaceBar pt={null} />
+            <Container>
+                <div className="flex flex-col md:flex-row gap-8">
+                    <aside className="md:w-2/6 w-full select-none">
+                        <Filters
+                            filters={filters}
+                            handleFilterChange={handleFilterChange}
+                            selectedFilters={selectedFilters}
+                        />
+                    </aside>
 
-                        <main className="w-full">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-                                {filteredCars.map((car) => (
-                                    <Card {...car} key={car.id} />
-                                ))}
-                            </div>
-                        </main>
-                    </div>
-                </Container>
-                <SpaceBar pt={null} />
-            </div>
-        </>
+                    <main className="w-full">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                            {filteredCars.map((car) => (
+                                <Card {...car} key={car.id} />
+                            ))}
+                        </div>
+                    </main>
+                </div>
+            </Container>
+            <SpaceBar pt={null} />
+        </div>
     );
 };
 
