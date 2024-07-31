@@ -1,3 +1,4 @@
 import Layout from "./Layout";
+import SpaceBar from "./SpaceBar";
 
-export { Layout };
+export { Layout, SpaceBar };
