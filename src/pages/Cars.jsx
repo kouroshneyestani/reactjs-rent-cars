@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { cars, carBrands } from "../data";
-import {
-    SpaceBar,
-    Container,
-    Accordion,
-    Filter,
-    Card1 as Card,
-} from "../components";
+import { SpaceBar, Container, Filters, Card1 as Card } from "../components";
 
 const Cars = () => {
     const [selectedFilters, setSelectedFilters] = useState({});
@@ -162,92 +156,11 @@ const Cars = () => {
                 <SpaceBar pt={null} />
                 <Container>
                     <div className="flex flex-col md:flex-row gap-8">
-                        <aside className="md:w-1/4 w-full  select-none">
-                            <div className="md:sticky md:top-6 p-6 rounded-default bg-overlay border-b-4 border-primary">
-                                <ul className="flex flex-col">
-                                    {filters.map((filter, index) => (
-                                        <li key={`filter-input-${index}`}>
-                                            <Accordion title={filter.label}>
-                                                {filter.type === "select" ? (
-                                                    <select
-                                                        name={filter.name}
-                                                        onChange={(e) =>
-                                                            handleFilterChange(
-                                                                filter.name,
-                                                                e.target.value
-                                                            )
-                                                        }
-                                                        className="form-select mb-2"
-                                                    >
-                                                        <option value="">
-                                                            انتخاب کنید
-                                                        </option>
-                                                        {filter.options.map(
-                                                            (option) => (
-                                                                <option
-                                                                    key={
-                                                                        option.value
-                                                                    }
-                                                                    value={
-                                                                        option.value
-                                                                    }
-                                                                >
-                                                                    {
-                                                                        option.label
-                                                                    }
-                                                                </option>
-                                                            )
-                                                        )}
-                                                    </select>
-                                                ) : (
-                                                    filter.type ===
-                                                        "checkbox" && (
-                                                        <div className="flex flex-col">
-                                                            {filter.options.map(
-                                                                (option) => (
-                                                                    <label
-                                                                        key={
-                                                                            option.value
-                                                                        }
-                                                                        className="flex items-center mb-2"
-                                                                    >
-                                                                        <input
-                                                                            type="checkbox"
-                                                                            name={
-                                                                                filter.name
-                                                                            }
-                                                                            value={
-                                                                                option.value
-                                                                            }
-                                                                            onChange={(
-                                                                                e
-                                                                            ) =>
-                                                                                handleFilterChange(
-                                                                                    filter.name,
-                                                                                    option.value,
-                                                                                    e
-                                                                                        .target
-                                                                                        .checked
-                                                                                )
-                                                                            }
-                                                                            className="form-checkbox"
-                                                                        />
-                                                                        <span className="ml-2">
-                                                                            {
-                                                                                option.label
-                                                                            }
-                                                                        </span>
-                                                                    </label>
-                                                                )
-                                                            )}
-                                                        </div>
-                                                    )
-                                                )}
-                                            </Accordion>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
+                        <aside className="md:w-1/4 w-full select-none">
+                            <Filters
+                                filters={filters}
+                                handleFilterChange={handleFilterChange}
+                            />
                         </aside>
 
                         <main className="md:w-3/4 w-full">

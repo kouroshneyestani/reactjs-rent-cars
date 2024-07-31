@@ -1,3 +1,3 @@
-import Filter from "./Filters";
+import Filters from "./Filters.jsx";
 
-export { Filter };
+export { Filters };
