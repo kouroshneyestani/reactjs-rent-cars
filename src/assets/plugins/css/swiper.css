@@ -1,0 +1,19 @@
+/* Style the pagination container */
+.swiper-pagination {
+    bottom: 3px;
+}
+
+/* Style individual bullets */
+.swiper-pagination-bullet {
+    width: 6px;
+    height: 6px;
+    opacity: 0.4;
+    border-radius: 50%;
+    background-color: var(--afc-background-color);
+    transition: background-color 0.3s;
+}
+
+/* Style the active bullet */
+.swiper-pagination-bullet-active {
+    opacity: 1;
+}
