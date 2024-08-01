@@ -2,13 +2,11 @@ import React, { useContext } from "react";
 import { CarsContext } from "../context/CarsContext";
 import { SpaceBar, Container, Filters, Card1 as Card } from "../components";
 
-// Cars component to display filtered car cards
 const Cars = () => {
-    // Consume the context to get filtered cars, options, and filter handlers
     const { cars, brandOptions, models, selectedFilters, handleFilterChange } =
         useContext(CarsContext);
 
-    // Define the filters to be displayed in the Filters component
+    // Define filters
     const filters = [
         {
             type: "checkbox",
@@ -52,7 +50,6 @@ const Cars = () => {
         },
     ];
 
-    // Render the Cars component with filters and car cards
     return (
         <div>
             <SpaceBar pt={null} />
