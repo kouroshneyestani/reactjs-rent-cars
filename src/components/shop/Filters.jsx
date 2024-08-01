@@ -1,11 +1,7 @@
 import React, { useContext } from "react";
 import { Accordion } from "../index";
-import { CarsContext } from "../../context/CarsContext";
 
-// Filters component to display filter options based on context data
 const Filters = ({ filters, handleFilterChange, selectedFilters }) => {
-    // Consume context to get additional data
-    const { brandOptions = [], models = [] } = useContext(CarsContext);
 
     // Determine if any brands are selected to conditionally display models
     const isBrandSelected =
