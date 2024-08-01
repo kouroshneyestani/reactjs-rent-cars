@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 
 // Components
 import { Layout } from "./components";
+import { CarsProvider } from "./context/CarsContext"; // Import the CarsProvider
 
 // Pages
 import Home from "./pages/Home";
@@ -14,16 +15,19 @@ import Error404 from "./pages/404";
 export default function App(props) {
     return (
         <div {...props}>
-            <Routes>
-                <Route path="/" element={<Layout />}>
-                    <Route index element={<Home />} />
-                    <Route path="cars" element={<Cars />} />
-                    <Route path="cars/:id" element={<CarsDetails />} />
-                    <Route path="search" element={<Search />} />
-                    <Route path="checkout" element={<Checkout />} />
-                    <Route path="*" element={<Error404 />} />
-                </Route>
-            </Routes>
+            {/* Wrap the Routes component with CarsProvider */}
+            <CarsProvider>
+                <Routes>
+                    <Route path="/" element={<Layout />}>
+                        <Route index element={<Home />} />
+                        <Route path="cars" element={<Cars />} />
+                        <Route path="cars/:id" element={<CarsDetails />} />
+                        <Route path="search" element={<Search />} />
+                        <Route path="checkout" element={<Checkout />} />
+                        <Route path="*" element={<Error404 />} />
+                    </Route>
+                </Routes>
+            </CarsProvider>
         </div>
     );
 }
