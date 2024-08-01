@@ -1,73 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { cars, carBrands } from "../data";
+import React, { useContext } from "react";
+import { CarsContext } from "../context/CarsContext";
 import { SpaceBar, Container, Filters, Card1 as Card } from "../components";
 
+// Cars component to display filtered car cards
 const Cars = () => {
-    const [selectedFilters, setSelectedFilters] = useState({});
-    const [models, setModels] = useState([]);
-    const [brandOptions, setBrandOptions] = useState([]);
+    // Consume the context to get filtered cars, options, and filter handlers
+    const { cars, brandOptions, models, selectedFilters, handleFilterChange } =
+        useContext(CarsContext);
 
-    useEffect(() => {
-        setBrandOptions(
-            carBrands.map((brand) => ({
-                value: brand.name,
-                label: `${brand.secondaryName} (${brand.name})`,
-            }))
-        );
-    }, []);
-
-    useEffect(() => {
-        const selectedBrands = selectedFilters.brand || [];
-
-        const allModels = selectedBrands.flatMap((brandName) => {
-            const brand = carBrands.find((b) => b.name === brandName);
-            return brand
-                ? brand.models.map((model) => ({
-                      value: model.name,
-                      label: `${brand.secondaryName} ${model.name}`,
-                  }))
-                : [];
-        });
-
-        const uniqueModels = Array.from(
-            new Set(allModels.map((model) => model.value))
-        ).map((value) => allModels.find((model) => model.value === value));
-
-        setModels(uniqueModels);
-    }, [selectedFilters.brand]);
-
-    const handleFilterChange = (name, value, checked) => {
-        setSelectedFilters((prevFilters) => {
-            const newFilters = { ...prevFilters };
-            if (["brand", "model"].includes(name)) {
-                newFilters[name] = checked
-                    ? [...(newFilters[name] || []), value]
-                    : (newFilters[name] || []).filter((item) => item !== value);
-            } else {
-                newFilters[name] = value;
-            }
-            return newFilters;
-        });
-    };
-
-    const isCarMatchingFilters = (car) => {
-        const { city, state, brand, model, year, transmission, vehicleType } =
-            selectedFilters;
-
-        return (
-            (!city || car.location.city === city) &&
-            (!state || car.location.state === state) &&
-            (!brand || brand.includes(car.details.brand)) &&
-            (!model || model.includes(car.details.model)) &&
-            (!year || car.details.year === year) &&
-            (!transmission ||
-                transmission.includes(car.details.transmission)) &&
-            (!vehicleType || vehicleType.includes(car.details.type))
-        );
-    };
-
-    const filteredCars = cars.filter(isCarMatchingFilters);
-
+    // Define the filters to be displayed in the Filters component
     const filters = [
         {
             type: "checkbox",
@@ -111,6 +52,7 @@ const Cars = () => {
         },
     ];
 
+    // Render the Cars component with filters and car cards
     return (
         <div>
             <SpaceBar pt={null} />
@@ -126,7 +68,7 @@ const Cars = () => {
 
                     <main className="w-full">
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {filteredCars.map((car) => (
+                            {cars.map((car) => (
                                 <Card {...car} key={car.id} />
                             ))}
                         </div>
