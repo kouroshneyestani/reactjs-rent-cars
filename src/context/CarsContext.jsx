@@ -1,98 +1,100 @@
-import React, { createContext, useState, useEffect } from "react";
-import { cars as initialCars, carBrands } from "../data";
+import React, { createContext, useState, useMemo } from "react";
+import { cars, carBrands } from "../data";
 
-// Create the context for cars data and actions
-const CarsContext = createContext();
+// Create Context
+export const CarsContext = createContext();
 
-// CarsProvider component to manage and provide car data and filters
-const CarsProvider = ({ children }) => {
-    // State for the cars data
-    const [cars, setCars] = useState(initialCars);
+// Create Provider
+export const CarsProvider = ({ children }) => {
+    // State for cars and filters
+    const [selectedFilters, setSelectedFilters] = useState({
+        brand: [],
+        model: [],
+        year: [],
+        vehicleType: [],
+        transmission: [],
+    });
 
-    // State for storing selected filters
-    const [selectedFilters, setSelectedFilters] = useState({});
-
-    // State for storing available models based on selected brands
-    const [models, setModels] = useState([]);
-
-    // State for storing available brand options
-    const [brandOptions, setBrandOptions] = useState([]);
-
-    // Effect to populate brand options on component mount
-    useEffect(() => {
-        setBrandOptions(
+    // Extract brand options and model options from carBrands
+    const brandOptions = useMemo(
+        () =>
             carBrands.map((brand) => ({
                 value: brand.name,
-                label: `${brand.secondaryName} (${brand.name})`,
-            }))
-        );
-    }, []);
+                label: brand.secondaryName,
+            })),
+        []
+    );
 
-    // Effect to update models when the selected brand filters change
-    useEffect(() => {
-        const selectedBrands = selectedFilters.brand || [];
+    const modelOptions = useMemo(
+        () =>
+            carBrands.flatMap((brand) =>
+                brand.models.map((model) => ({
+                    value: model.name,
+                    label: model.secondaryName,
+                }))
+            ),
+        []
+    );
 
-        // Get models for selected brands
-        const allModels = selectedBrands.flatMap((brandName) => {
-            const brand = carBrands.find((b) => b.name === brandName);
-            return brand
-                ? brand.models.map((model) => ({
-                      value: model.name,
-                      label: `${brand.secondaryName} ${model.name}`,
-                  }))
-                : [];
+    // Filter cars based on selected filters
+    const filteredCars = useMemo(() => {
+        return cars.filter((car) => {
+            const { brand, model, year, vehicleType, transmission } =
+                selectedFilters;
+
+            // Check brand filter
+            const brandMatches =
+                brand.length === 0 || brand.includes(car.details.brand);
+
+            // Check model filter
+            const modelMatches =
+                model.length === 0 || model.includes(car.details.model);
+
+            // Check year filter
+            const yearMatches =
+                year.length === 0 || year.includes(car.details.year.toString());
+
+            // Check vehicleType filter
+            const vehicleTypeMatches =
+                vehicleType.length === 0 ||
+                (vehicleType.includes("luxury") &&
+                    car.details.brand === "Mercedes Benz") ||
+                (vehicleType.includes("suv") &&
+                    (car.details.model.includes("Rav4") ||
+                        car.details.model.includes("Discovery"))) ||
+                (vehicleType.includes("economy") &&
+                    (car.details.model.includes("Corolla") ||
+                        car.details.model.includes("Sunny")));
+
+            // Check transmission filter
+            const transmissionMatches =
+                transmission.length === 0 ||
+                transmission.includes(car.details.transmission.toLowerCase());
+
+            return (
+                brandMatches &&
+                modelMatches &&
+                yearMatches &&
+                vehicleTypeMatches &&
+                transmissionMatches
+            );
         });
+    }, [selectedFilters]);
 
-        // Ensure models are unique
-        const uniqueModels = Array.from(
-            new Set(allModels.map((model) => model.value))
-        ).map((value) => allModels.find((model) => model.value === value));
-
-        setModels(uniqueModels);
-    }, [selectedFilters.brand]);
-
-    // Function to handle filter changes
-    const handleFilterChange = (name, value, checked) => {
-        setSelectedFilters((prevFilters) => {
-            const newFilters = { ...prevFilters };
-            if (["brand", "model"].includes(name)) {
-                newFilters[name] = checked
-                    ? [...(newFilters[name] || []), value]
-                    : (newFilters[name] || []).filter((item) => item !== value);
-            } else {
-                newFilters[name] = value;
-            }
-            return newFilters;
-        });
+    // Handler for filter changes
+    const handleFilterChange = (filterName, value) => {
+        setSelectedFilters((prevFilters) => ({
+            ...prevFilters,
+            [filterName]: value,
+        }));
     };
 
-    // Function to check if a car matches the selected filters
-    const isCarMatchingFilters = (car) => {
-        const { city, state, brand, model, year, transmission, vehicleType } =
-            selectedFilters;
-
-        return (
-            (!city || car.location.city === city) &&
-            (!state || car.location.state === state) &&
-            (!brand || brand.includes(car.details.brand)) &&
-            (!model || model.includes(car.details.model)) &&
-            (!year || car.details.year === year) &&
-            (!transmission ||
-                transmission.includes(car.details.transmission)) &&
-            (!vehicleType || vehicleType.includes(car.details.type))
-        );
-    };
-
-    // Filter cars based on the selected filters
-    const filteredCars = cars.filter(isCarMatchingFilters);
-
-    // Provide the state and functions to the rest of the app
     return (
         <CarsContext.Provider
             value={{
                 cars: filteredCars,
                 brandOptions,
-                models,
+                models: modelOptions,
                 selectedFilters,
                 handleFilterChange,
             }}
@@ -101,5 +103,3 @@ const CarsProvider = ({ children }) => {
         </CarsContext.Provider>
     );
 };
-
-export { CarsProvider, CarsContext };
