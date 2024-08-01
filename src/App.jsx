@@ -1,4 +1,8 @@
 import { Routes, Route } from "react-router-dom";
+import { Provider } from "react-redux";
+
+// Import the configured store
+import { store } from "./app/store";
 
 // Components
 import { Layout } from "./components";
@@ -14,17 +18,18 @@ import Error404 from "./pages/404";
 export default function App(props) {
     return (
         <div {...props}>
-            {/* Wrap the Routes component with CarsProvider */}
-            <Routes>
-                <Route path="/" element={<Layout />}>
-                    <Route index element={<Home />} />
-                    <Route path="cars" element={<Cars />} />
-                    <Route path="cars/:id" element={<CarsDetails />} />
-                    <Route path="search" element={<Search />} />
-                    <Route path="checkout" element={<Checkout />} />
-                    <Route path="*" element={<Error404 />} />
-                </Route>
-            </Routes>
+            <Provider store={store}>
+                <Routes>
+                    <Route path="/" element={<Layout />}>
+                        <Route index element={<Home />} />
+                        <Route path="cars" element={<Cars />} />
+                        <Route path="cars/:id" element={<CarsDetails />} />
+                        <Route path="search" element={<Search />} />
+                        <Route path="checkout" element={<Checkout />} />
+                        <Route path="*" element={<Error404 />} />
+                    </Route>
+                </Routes>
+            </Provider>
         </div>
     );
 }

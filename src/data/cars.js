@@ -3,6 +3,7 @@ import placeholder2 from "../assets/images/placeholders/car.jpg";
 import placeholder3 from "../assets/images/placeholders/car.jpg";
 
 export const cars = [
+    // Mercedes-Benz C200
     {
         id: 1,
         title: "مرسدس بنز C200",
@@ -55,6 +56,7 @@ export const cars = [
             status: "available",
         },
     },
+    // BMW Series 5
     {
         id: 2,
         title: "بی‌ام‌و سری 5",
@@ -106,6 +108,7 @@ export const cars = [
             status: "available",
         },
     },
+    // Toyota Corolla
     {
         id: 3,
         title: "تویوتا کرولا",
@@ -157,9 +160,10 @@ export const cars = [
             status: "available",
         },
     },
+    // Land Rover Discovery
     {
         id: 4,
-        title: "لند روور",
+        title: "لند روور دیسکاوری",
         subtitle: "شاسی بلند لوکس و راحت",
         images: [placeholder1, placeholder2, placeholder3],
         user: "user4",
@@ -209,6 +213,7 @@ export const cars = [
             status: "available",
         },
     },
+    // Mercedes-Benz E-Class
     {
         id: 5,
         title: "مرسدس بنز E-Class",
@@ -261,6 +266,7 @@ export const cars = [
             status: "available",
         },
     },
+    // Toyota Rav4
     {
         id: 6,
         title: "تویوتا راو 4",
@@ -308,6 +314,161 @@ export const cars = [
         },
         availability: {
             availableFrom: "2024-08-10",
+            availableTo: "2024-12-31",
+            status: "available",
+        },
+    },
+    // Additional models for the provided brands
+    // Mercedes-Benz
+    {
+        id: 7,
+        title: "مرسدس بنز A-Class",
+        subtitle: "هاچ بک لوکس و جوان پسند",
+        images: [placeholder1, placeholder2, placeholder3],
+        user: "user7",
+        price: {
+            type: "rent_by_day",
+            discount: 12,
+            currency: "IRR",
+            pricePerSale: null,
+            pricePerDay: 4500000,
+            pricePerMonth: 110000000,
+        },
+        reviews: {
+            count: 10,
+            rating: 4.6,
+        },
+        location: {
+            city: "تهران",
+            state: "تهران",
+            country: "ایران",
+            address: "خیابان جردن، پلاک ۲۳",
+            latitude: 35.7596,
+            longitude: 51.4191,
+        },
+        details: {
+            model: "A-Class",
+            brand: "مرسدس بنز",
+            year: 2022,
+            fuelType: "بنزین",
+            transmission: "اتوماتیک",
+            capacity: 5,
+            doors: 4,
+            color: "قرمز",
+            description:
+                "مرسدس بنز A-Class، هاچ بک لوکس با طراحی مدرن و امکانات رفاهی.",
+            features: [
+                "سیستم تهویه مطبوع",
+                "صندلی‌های چرمی",
+                "سیستم صوتی حرفه‌ای",
+                "دوربین دنده عقب",
+            ],
+        },
+        availability: {
+            availableFrom: "2024-08-20",
+            availableTo: "2024-12-31",
+            status: "available",
+        },
+    },
+    // BMW 3 Series
+    {
+        id: 8,
+        title: "بی‌ام‌و سری 3",
+        subtitle: "سدان اسپرت و پر قدرت",
+        images: [placeholder1, placeholder2, placeholder3],
+        user: "user8",
+        price: {
+            type: "rent_by_day",
+            discount: 8,
+            currency: "IRR",
+            pricePerSale: null,
+            pricePerDay: 5500000,
+            pricePerMonth: 140000000,
+        },
+        reviews: {
+            count: 18,
+            rating: 4.8,
+        },
+        location: {
+            city: "تهران",
+            state: "تهران",
+            country: "ایران",
+            address: "خیابان ولیعصر، پلاک ۴۵",
+            latitude: 35.7596,
+            longitude: 51.4191,
+        },
+        details: {
+            model: "330i",
+            brand: "بی ام دبلیو",
+            year: 2022,
+            fuelType: "بنزین",
+            transmission: "اتوماتیک",
+            capacity: 5,
+            doors: 4,
+            color: "آبی",
+            description:
+                "بی‌ام‌و سری 3، سدان اسپرت با عملکرد بالا و طراحی جذاب.",
+            features: [
+                "سیستم تهویه مطبوع",
+                "صندلی‌های چرمی",
+                "سیستم صوتی حرفه‌ای",
+                "دوربین 360 درجه",
+            ],
+        },
+        availability: {
+            availableFrom: "2024-09-10",
+            availableTo: "2024-12-31",
+            status: "available",
+        },
+    },
+    // Toyota Camry
+    {
+        id: 9,
+        title: "تویوتا کمری",
+        subtitle: "سدان خانوادگی و راحت",
+        images: [placeholder1, placeholder2, placeholder3],
+        user: "user9",
+        price: {
+            type: "rent_by_day",
+            discount: 7,
+            currency: "IRR",
+            pricePerSale: null,
+            pricePerDay: 3500000,
+            pricePerMonth: 100000000,
+        },
+        reviews: {
+            count: 16,
+            rating: 4.7,
+        },
+        location: {
+            city: "اهواز",
+            state: "خوزستان",
+            country: "ایران",
+            address: "خیابان شریعتی، پلاک ۵",
+            latitude: 31.3202,
+            longitude: 48.6914,
+        },
+        details: {
+            model: "Camry",
+            brand: "تویوتا",
+            year: 2022,
+            fuelType: "بنزین",
+            transmission: "اتوماتیک",
+            capacity: 5,
+            doors: 4,
+            color: "طلایی",
+            description:
+                "تویوتا کمری، سدان خانوادگی با راحتی بالا و تکنولوژی‌های مدرن.",
+            features: [
+                "سیستم تهویه مطبوع",
+                "صندلی‌های چرمی",
+                "سیستم صوتی استاندارد",
+                "دوربین دنده عقب",
+                "کروز کنترل",
+            ],
+        },
+        availability: {
+            availableFrom: "2024-08-05",
             availableTo: "2024-12-31",
             status: "available",
         },
