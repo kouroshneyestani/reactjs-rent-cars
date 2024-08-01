@@ -3,23 +3,11 @@ import { Accordion } from "../index";
 import { CarsContext } from "../../context/CarsContext";
 
 // Filters component to display filter options based on context data
-const Filters = () => {
-    // Consume context to get filter options and handler
-    const {
-        filters = [],
-        handleFilterChange,
-        selectedFilters = {},
-        brandOptions = [],
-        models = [],
-    } = useContext(CarsContext);
+const Filters = ({ filters, handleFilterChange, selectedFilters }) => {
+    const { models } = useContext(CarsContext);
 
     // Determine if any brands are selected to conditionally display models
     const isBrandSelected = selectedFilters.brand?.length > 0;
-
-    // Check if filters data is available before rendering
-    if (filters.length === 0) {
-        return <div>No filters available</div>;
-    }
 
     // Render the Filters component with filter accordions
     return (
