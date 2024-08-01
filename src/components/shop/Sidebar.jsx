@@ -44,7 +44,7 @@ const Sidebar = ({ onFilter, cars }) => {
         setSelectedBrandModels(models);
     }, [brands]);
 
-    // Handle changes in the filter inputs
+    // Handle filter changes and update the filters in real-time
     const handleFilterChange = () => {
         onFilter({
             priceRange,
@@ -60,6 +60,20 @@ const Sidebar = ({ onFilter, cars }) => {
             brands,
             models: selectedModels,
         });
+    };
+
+    // Create handlers for each filter input
+    const createFilterHandler = (setter) => (e) => {
+        setter(e.target.value);
+        handleFilterChange();
+    };
+
+    const createCheckboxHandler = (value, setter, currentArray) => (e) => {
+        const newArray = e.target.checked
+            ? [...currentArray, value]
+            : currentArray.filter((item) => item !== value);
+        setter(newArray);
+        handleFilterChange();
     };
 
     return (
@@ -78,12 +92,11 @@ const Sidebar = ({ onFilter, cars }) => {
                             id={`brand-${brand}`}
                             value={brand}
                             checked={brands.includes(brand)}
-                            onChange={(e) => {
-                                const newBrands = e.target.checked
-                                    ? [...brands, brand]
-                                    : brands.filter((val) => val !== brand);
-                                setBrands(newBrands);
-                            }}
+                            onChange={createCheckboxHandler(
+                                brand,
+                                setBrands,
+                                brands
+                            )}
                             className="mr-2"
                         />
                         <label htmlFor={`brand-${brand}`} className="text-sm">
@@ -111,14 +124,11 @@ const Sidebar = ({ onFilter, cars }) => {
                                 id={`model-${model.name}`}
                                 value={model.name}
                                 checked={selectedModels.includes(model.name)}
-                                onChange={(e) => {
-                                    const newModels = e.target.checked
-                                        ? [...selectedModels, model.name]
-                                        : selectedModels.filter(
-                                              (val) => val !== model.name
-                                          );
-                                    setSelectedModels(newModels);
-                                }}
+                                onChange={createCheckboxHandler(
+                                    model.name,
+                                    setSelectedModels,
+                                    selectedModels
+                                )}
                                 className="mr-2"
                             />
                             <label
@@ -139,7 +149,7 @@ const Sidebar = ({ onFilter, cars }) => {
                 </label>
                 <select
                     value={priceRange}
-                    onChange={(e) => setPriceRange(e.target.value)}
+                    onChange={createFilterHandler(setPriceRange)}
                     className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                 >
                     <option value="">Select Range</option>
@@ -160,7 +170,7 @@ const Sidebar = ({ onFilter, cars }) => {
                     id="pricePerDay"
                     type="number"
                     value={pricePerDay}
-                    onChange={(e) => setPricePerDay(e.target.value)}
+                    onChange={createFilterHandler(setPricePerDay)}
                     className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                 />
             </div>
@@ -176,7 +186,11 @@ const Sidebar = ({ onFilter, cars }) => {
                 <select
                     id="state"
                     value={state}
-                    onChange={(e) => setState(e.target.value)}
+                    onChange={(e) => {
+                        setState(e.target.value);
+                        setCity(""); // Clear city selection when state changes
+                        handleFilterChange();
+                    }}
                     className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                 >
                     <option value="">Select State</option>
@@ -198,7 +212,7 @@ const Sidebar = ({ onFilter, cars }) => {
                     <select
                         id="city"
                         value={city}
-                        onChange={(e) => setCity(e.target.value)}
+                        onChange={createFilterHandler(setCity)}
                         className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                     >
                         <option value="">Select City</option>
@@ -225,12 +239,7 @@ const Sidebar = ({ onFilter, cars }) => {
                             id={`year-${y}`}
                             value={y}
                             checked={year.includes(y)}
-                            onChange={(e) => {
-                                const newYears = e.target.checked
-                                    ? [...year, y]
-                                    : year.filter((val) => val !== y);
-                                setYear(newYears);
-                            }}
+                            onChange={createCheckboxHandler(y, setYear, year)}
                             className="mr-2"
                         />
                         <label htmlFor={`year-${y}`} className="text-sm">
@@ -251,7 +260,7 @@ const Sidebar = ({ onFilter, cars }) => {
                 <select
                     id="fuelType"
                     value={fuelType}
-                    onChange={(e) => setFuelType(e.target.value)}
+                    onChange={createFilterHandler(setFuelType)}
                     className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                 >
                     <option value="">Select Fuel Type</option>
@@ -274,7 +283,7 @@ const Sidebar = ({ onFilter, cars }) => {
                 <select
                     id="transmission"
                     value={transmission}
-                    onChange={(e) => setTransmission(e.target.value)}
+                    onChange={createFilterHandler(setTransmission)}
                     className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                 >
                     <option value="">Select Transmission</option>
@@ -297,7 +306,7 @@ const Sidebar = ({ onFilter, cars }) => {
                 <select
                     id="capacity"
                     value={capacity}
-                    onChange={(e) => setCapacity(e.target.value)}
+                    onChange={createFilterHandler(setCapacity)}
                     className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                 >
                     <option value="">Select Capacity</option>
@@ -321,12 +330,7 @@ const Sidebar = ({ onFilter, cars }) => {
                             id={`color-${c}`}
                             value={c}
                             checked={color.includes(c)}
-                            onChange={(e) => {
-                                const newColors = e.target.checked
-                                    ? [...color, c]
-                                    : color.filter((val) => val !== c);
-                                setColor(newColors);
-                            }}
+                            onChange={createCheckboxHandler(c, setColor, color)}
                             className="mr-2"
                         />
                         <label htmlFor={`color-${c}`} className="text-sm">
@@ -348,12 +352,11 @@ const Sidebar = ({ onFilter, cars }) => {
                             id={`feature-${f}`}
                             value={f}
                             checked={features.includes(f)}
-                            onChange={(e) => {
-                                const newFeatures = e.target.checked
-                                    ? [...features, f]
-                                    : features.filter((val) => val !== f);
-                                setFeatures(newFeatures);
-                            }}
+                            onChange={createCheckboxHandler(
+                                f,
+                                setFeatures,
+                                features
+                            )}
                             className="mr-2"
                         />
                         <label htmlFor={`feature-${f}`} className="text-sm">
@@ -362,14 +365,6 @@ const Sidebar = ({ onFilter, cars }) => {
                     </div>
                 ))}
             </div>
-
-            {/* Apply Filters Button */}
-            <button
-                onClick={handleFilterChange}
-                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md"
-            >
-                Apply Filters
-            </button>
         </aside>
     );
 };
