@@ -1,10 +1,12 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { SpaceBar, Container, Card1 as Card, Sidebar } from "../components";
+import { setFilters } from "../slices/carSlice";
 
 const Cars = () => {
+    const dispatch = useDispatch();
     const cars = useSelector((state) => state.cars.list);
-    const [filteredCars, setFilteredCars] = useState(cars);
+    const filters = useSelector((state) => state.cars.filters);
 
     // Function to filter cars based on selected criteria
     const filterCars = (filters) => {
@@ -65,7 +67,20 @@ const Cars = () => {
             );
         });
 
-        setFilteredCars(filtered);
+        return filtered;
+    };
+
+    // Use a separate state to avoid infinite loops
+    const [filteredCars, setFilteredCars] = React.useState(cars);
+
+    useEffect(() => {
+        // Only update filteredCars when filters or cars change
+        const newFilteredCars = filterCars(filters);
+        setFilteredCars(newFilteredCars);
+    }, [filters, cars]);
+
+    const handleFilterChange = (newFilters) => {
+        dispatch(setFilters(newFilters));
     };
 
     return (
@@ -73,8 +88,7 @@ const Cars = () => {
             <SpaceBar pt={null} />
             <Container>
                 <div className="flex flex-col md:flex-row gap-8">
-                    <Sidebar onFilter={filterCars} cars={cars} />{" "}
-                    {/* Add Sidebar component */}
+                    <Sidebar onFilter={handleFilterChange} cars={cars} />
                     <main className="w-full">
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                             {filteredCars.map((car) => (
