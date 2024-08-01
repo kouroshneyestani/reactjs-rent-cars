@@ -1,39 +1,71 @@
-import React, { useState, useEffect } from "react";
-import { carBrands } from "../../data";
+// src/components/Sidebar.jsx
 
-const Sidebar = ({ onFilter, cars }) => {
-    const [priceRange, setPriceRange] = useState("");
-    const [pricePerDay, setPricePerDay] = useState("");
-    const [state, setState] = useState("");
-    const [city, setCity] = useState("");
-    const [year, setYear] = useState([]);
-    const [fuelType, setFuelType] = useState("");
-    const [transmission, setTransmission] = useState("");
-    const [capacity, setCapacity] = useState("");
-    const [color, setColor] = useState([]);
-    const [features, setFeatures] = useState([]);
-    const [brands, setBrands] = useState([]);
+import React, { useEffect, useState } from "react";
+import { carBrands } from "../../data";
+import useFilters from "../../hooks/useFilters";
+
+const FilterCheckbox = ({ label, value, checked, onChange }) => (
+    <div className="flex items-center mb-2">
+        <input
+            type="checkbox"
+            id={label}
+            value={value}
+            checked={checked}
+            onChange={onChange}
+            className="mr-2"
+        />
+        <label htmlFor={label} className="text-sm">
+            {label}
+        </label>
+    </div>
+);
+
+const Sidebar = () => {
+    const { filters, setFilter, filteredCars } = useFilters();
     const [selectedBrandModels, setSelectedBrandModels] = useState([]);
     const [selectedModels, setSelectedModels] = useState([]);
 
-    // Create options for states and cities
-    const states = [...new Set(cars.map((car) => car.location.state))];
-    const cities = [...new Set(cars.map((car) => car.location.city))];
-    const years = [...new Set(cars.map((car) => car.details.year))].sort(
-        (a, b) => a - b
-    );
-    const fuelTypes = [...new Set(cars.map((car) => car.details.fuelType))];
-    const transmissions = [
-        ...new Set(cars.map((car) => car.details.transmission)),
+    const {
+        priceRange,
+        pricePerDay,
+        state,
+        city,
+        year,
+        fuelType,
+        transmission,
+        capacity,
+        color,
+        features,
+        brands,
+    } = filters;
+
+    // Compute unique values based on filtered cars
+    const states = [...new Set(filteredCars.map((car) => car.location.state))];
+    const cities = [
+        ...new Set(
+            filteredCars
+                .filter((car) => car.location.state === state)
+                .map((car) => car.location.city)
+        ),
     ];
-    const capacities = [...new Set(cars.map((car) => car.details.capacity))];
-    const colors = [...new Set(cars.map((car) => car.details.color))];
+    const years = [
+        ...new Set(filteredCars.map((car) => car.details.year)),
+    ].sort((a, b) => a - b);
+    const fuelTypes = [
+        ...new Set(filteredCars.map((car) => car.details.fuelType)),
+    ];
+    const transmissions = [
+        ...new Set(filteredCars.map((car) => car.details.transmission)),
+    ];
+    const capacities = [
+        ...new Set(filteredCars.map((car) => car.details.capacity)),
+    ];
+    const colors = [...new Set(filteredCars.map((car) => car.details.color))];
     const allFeatures = [
-        ...new Set(cars.flatMap((car) => car.details.features)),
+        ...new Set(filteredCars.flatMap((car) => car.details.features)),
     ];
     const brandNames = carBrands.map((brand) => brand.name);
 
-    // Update selectedBrandModels based on selected brands
     useEffect(() => {
         const models = carBrands
             .filter((brand) => brands.includes(brand.name))
@@ -44,36 +76,15 @@ const Sidebar = ({ onFilter, cars }) => {
         setSelectedBrandModels(models);
     }, [brands]);
 
-    // Handle filter changes and update the filters in real-time
-    const handleFilterChange = () => {
-        onFilter({
-            priceRange,
-            pricePerDay,
-            state,
-            city,
-            year,
-            fuelType,
-            transmission,
-            capacity,
-            color,
-            features,
-            brands,
-            models: selectedModels,
-        });
+    const handleChange = (field) => (e) => {
+        setFilter({ [field]: e.target.value });
     };
 
-    // Create handlers for each filter input
-    const createFilterHandler = (setter) => (e) => {
-        setter(e.target.value);
-        handleFilterChange();
-    };
-
-    const createCheckboxHandler = (value, setter, currentArray) => (e) => {
+    const handleCheckboxChange = (field) => (value) => (e) => {
         const newArray = e.target.checked
-            ? [...currentArray, value]
-            : currentArray.filter((item) => item !== value);
-        setter(newArray);
-        handleFilterChange();
+            ? [...filters[field], value]
+            : filters[field].filter((item) => item !== value);
+        setFilter({ [field]: newArray });
     };
 
     return (
@@ -86,23 +97,13 @@ const Sidebar = ({ onFilter, cars }) => {
                     Brands
                 </label>
                 {brandNames.map((brand) => (
-                    <div key={brand} className="flex items-center mb-2">
-                        <input
-                            type="checkbox"
-                            id={`brand-${brand}`}
-                            value={brand}
-                            checked={brands.includes(brand)}
-                            onChange={createCheckboxHandler(
-                                brand,
-                                setBrands,
-                                brands
-                            )}
-                            className="mr-2"
-                        />
-                        <label htmlFor={`brand-${brand}`} className="text-sm">
-                            {brand}
-                        </label>
-                    </div>
+                    <FilterCheckbox
+                        key={brand}
+                        label={brand}
+                        value={brand}
+                        checked={brands.includes(brand)}
+                        onChange={handleCheckboxChange("brands")(brand)}
+                    />
                 ))}
             </div>
 
@@ -112,32 +113,18 @@ const Sidebar = ({ onFilter, cars }) => {
                     Models
                 </label>
                 {brands.length === 0 ? (
-                    <p className="text-gray-500">Please choose brand first</p>
+                    <p className="text-gray-500">Please choose a brand first</p>
                 ) : (
                     selectedBrandModels.map((model) => (
-                        <div
+                        <FilterCheckbox
                             key={model.name}
-                            className="flex items-center mb-2"
-                        >
-                            <input
-                                type="checkbox"
-                                id={`model-${model.name}`}
-                                value={model.name}
-                                checked={selectedModels.includes(model.name)}
-                                onChange={createCheckboxHandler(
-                                    model.name,
-                                    setSelectedModels,
-                                    selectedModels
-                                )}
-                                className="mr-2"
-                            />
-                            <label
-                                htmlFor={`model-${model.name}`}
-                                className="text-sm"
-                            >
-                                {model.name}
-                            </label>
-                        </div>
+                            label={model.name}
+                            value={model.name}
+                            checked={selectedModels.includes(model.name)}
+                            onChange={handleCheckboxChange("models")(
+                                model.name
+                            )}
+                        />
                     ))
                 )}
             </div>
@@ -149,7 +136,7 @@ const Sidebar = ({ onFilter, cars }) => {
                 </label>
                 <select
                     value={priceRange}
-                    onChange={createFilterHandler(setPriceRange)}
+                    onChange={handleChange("priceRange")}
                     className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                 >
                     <option value="">Select Range</option>
@@ -170,7 +157,7 @@ const Sidebar = ({ onFilter, cars }) => {
                     id="pricePerDay"
                     type="number"
                     value={pricePerDay}
-                    onChange={createFilterHandler(setPricePerDay)}
+                    onChange={handleChange("pricePerDay")}
                     className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                 />
             </div>
@@ -187,9 +174,7 @@ const Sidebar = ({ onFilter, cars }) => {
                     id="state"
                     value={state}
                     onChange={(e) => {
-                        setState(e.target.value);
-                        setCity(""); // Clear city selection when state changes
-                        handleFilterChange();
+                        setFilter({ state: e.target.value, city: "" }); // Clear city selection
                     }}
                     className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                 >
@@ -212,17 +197,15 @@ const Sidebar = ({ onFilter, cars }) => {
                     <select
                         id="city"
                         value={city}
-                        onChange={createFilterHandler(setCity)}
+                        onChange={handleChange("city")}
                         className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                     >
                         <option value="">Select City</option>
-                        {cities
-                            .filter((c) => c.state === state)
-                            .map((c) => (
-                                <option key={c} value={c}>
-                                    {c}
-                                </option>
-                            ))}
+                        {cities.map((c) => (
+                            <option key={c} value={c}>
+                                {c}
+                            </option>
+                        ))}
                     </select>
                 </div>
             )}
@@ -233,19 +216,13 @@ const Sidebar = ({ onFilter, cars }) => {
                     Year
                 </label>
                 {years.map((y) => (
-                    <div key={y} className="flex items-center mb-2">
-                        <input
-                            type="checkbox"
-                            id={`year-${y}`}
-                            value={y}
-                            checked={year.includes(y)}
-                            onChange={createCheckboxHandler(y, setYear, year)}
-                            className="mr-2"
-                        />
-                        <label htmlFor={`year-${y}`} className="text-sm">
-                            {y}
-                        </label>
-                    </div>
+                    <FilterCheckbox
+                        key={y}
+                        label={y}
+                        value={y}
+                        checked={year.includes(y)}
+                        onChange={handleCheckboxChange("year")(y)}
+                    />
                 ))}
             </div>
 
@@ -260,7 +237,7 @@ const Sidebar = ({ onFilter, cars }) => {
                 <select
                     id="fuelType"
                     value={fuelType}
-                    onChange={createFilterHandler(setFuelType)}
+                    onChange={handleChange("fuelType")}
                     className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                 >
                     <option value="">Select Fuel Type</option>
@@ -283,7 +260,7 @@ const Sidebar = ({ onFilter, cars }) => {
                 <select
                     id="transmission"
                     value={transmission}
-                    onChange={createFilterHandler(setTransmission)}
+                    onChange={handleChange("transmission")}
                     className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                 >
                     <option value="">Select Transmission</option>
@@ -306,7 +283,7 @@ const Sidebar = ({ onFilter, cars }) => {
                 <select
                     id="capacity"
                     value={capacity}
-                    onChange={createFilterHandler(setCapacity)}
+                    onChange={handleChange("capacity")}
                     className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                 >
                     <option value="">Select Capacity</option>
@@ -324,19 +301,13 @@ const Sidebar = ({ onFilter, cars }) => {
                     Color
                 </label>
                 {colors.map((c) => (
-                    <div key={c} className="flex items-center mb-2">
-                        <input
-                            type="checkbox"
-                            id={`color-${c}`}
-                            value={c}
-                            checked={color.includes(c)}
-                            onChange={createCheckboxHandler(c, setColor, color)}
-                            className="mr-2"
-                        />
-                        <label htmlFor={`color-${c}`} className="text-sm">
-                            {c}
-                        </label>
-                    </div>
+                    <FilterCheckbox
+                        key={c}
+                        label={c}
+                        value={c}
+                        checked={color.includes(c)}
+                        onChange={handleCheckboxChange("color")(c)}
+                    />
                 ))}
             </div>
 
@@ -346,23 +317,13 @@ const Sidebar = ({ onFilter, cars }) => {
                     Features
                 </label>
                 {allFeatures.map((f) => (
-                    <div key={f} className="flex items-center mb-2">
-                        <input
-                            type="checkbox"
-                            id={`feature-${f}`}
-                            value={f}
-                            checked={features.includes(f)}
-                            onChange={createCheckboxHandler(
-                                f,
-                                setFeatures,
-                                features
-                            )}
-                            className="mr-2"
-                        />
-                        <label htmlFor={`feature-${f}`} className="text-sm">
-                            {f}
-                        </label>
-                    </div>
+                    <FilterCheckbox
+                        key={f}
+                        label={f}
+                        value={f}
+                        checked={features.includes(f)}
+                        onChange={handleCheckboxChange("features")(f)}
+                    />
                 ))}
             </div>
         </aside>

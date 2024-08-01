@@ -19,16 +19,13 @@ const carSlice = createSlice({
             brands: [],
             models: [],
         },
-        filteredCars: initialCars, // Initial filtered cars state
     },
     reducers: {
         setCars: (state, action) => {
             state.list = action.payload;
         },
         setFilters: (state, action) => {
-            const { filteredCars, ...filters } = action.payload;
-            state.filters = filters;
-            state.filteredCars = filteredCars || state.filteredCars; // Update filteredCars
+            state.filters = { ...state.filters, ...action.payload };
         },
         clearFilters: (state) => {
             state.filters = {
@@ -45,7 +42,6 @@ const carSlice = createSlice({
                 brands: [],
                 models: [],
             };
-            state.filteredCars = state.list; // Clear filters and show all cars
         },
     },
 });
