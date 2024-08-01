@@ -4,10 +4,18 @@ import { CarsContext } from "../../context/CarsContext";
 
 // Filters component to display filter options based on context data
 const Filters = ({ filters, handleFilterChange, selectedFilters }) => {
-    const { models } = useContext(CarsContext);
+    // Consume context to get additional data
+    const { brandOptions = [], models = [] } = useContext(CarsContext);
 
     // Determine if any brands are selected to conditionally display models
-    const isBrandSelected = selectedFilters.brand?.length > 0;
+    const isBrandSelected =
+        Array.isArray(selectedFilters.brand) &&
+        selectedFilters.brand.length > 0;
+
+    // Check if filters data is available before rendering
+    if (!filters || filters.length === 0) {
+        return <div>No filters available</div>;
+    }
 
     // Render the Filters component with filter accordions
     return (
@@ -35,9 +43,13 @@ const Filters = ({ filters, handleFilterChange, selectedFilters }) => {
                                                             name={filter.name}
                                                             value={option.value}
                                                             checked={
-                                                                selectedFilters.model?.includes(
-                                                                    option.value
-                                                                ) || false
+                                                                (Array.isArray(
+                                                                    selectedFilters.model
+                                                                ) &&
+                                                                    selectedFilters.model.includes(
+                                                                        option.value
+                                                                    )) ||
+                                                                false
                                                             }
                                                             onChange={(e) =>
                                                                 handleFilterChange(
@@ -78,9 +90,12 @@ const Filters = ({ filters, handleFilterChange, selectedFilters }) => {
                                             name={filter.name}
                                             value={option.value}
                                             checked={
-                                                selectedFilters[
-                                                    filter.name
-                                                ]?.includes(option.value) ||
+                                                (Array.isArray(
+                                                    selectedFilters[filter.name]
+                                                ) &&
+                                                    selectedFilters[
+                                                        filter.name
+                                                    ].includes(option.value)) ||
                                                 false
                                             }
                                             onChange={(e) =>
